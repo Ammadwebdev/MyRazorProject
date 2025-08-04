@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using MyRazorProject.Repositories;
+using MyRazorProject.Repository.IRespository;
 using Thecoreappnow.Data;
 
 namespace MyRazorProject
@@ -13,6 +15,12 @@ namespace MyRazorProject
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
             var app = builder.Build();
 

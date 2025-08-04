@@ -1,85 +1,84 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MyRazorProject.Models;
-using System.Linq;
-using Thecoreappnow.Data;
+using MyRazorProject.Repository.IRespository;
 
 namespace MyRazorProject.Controllers
 {
     public class CategoryController : Controller
     {
+        private readonly ICategoryRepository _categoryRepo;
 
-        private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+        public CategoryController(ICategoryRepository categoryRepo)
         {
-            _db = db;
+            _categoryRepo = categoryRepo;
         }
-
 
         public IActionResult Index()
         {
-            List<Category> categoryList = _db.Categories.ToList(); // Assuming _db is your DbContext
+            var categoryList = _categoryRepo.GetAll();
             return View(categoryList);
         }
 
+        public IActionResult Create() => View();
 
+        [HttpPost]
+        public IActionResult Create(Category obj)
+        {
+            if (obj.Name == obj.DisplayOrder.ToString())
+                ModelState.AddModelError("name", "The name cannot match the display order");
+
+            if (obj.Name?.ToLower() == "test")
+                ModelState.AddModelError("", "Test is an invalid value");
+
+            if (ModelState.IsValid)
+            {
+                _categoryRepo.Add(obj);
+                _categoryRepo.Save();
+                TempData["success"] = "Category created successfully!";
+                return RedirectToAction("Index");
+            }
+
+            return View();
+        }
 
         public IActionResult Edit(int? id)
         {
             if (id == null || id == 0)
-            {
-
-                return NotFound();
-            }
-
-
-            Category? categoryFromDb = _db.Categories.Find(id);
-
-        
-            if (categoryFromDb == null)
-            {
                 return NotFound();
 
-            }
-            return View(categoryFromDb);
+            var category = _categoryRepo.GetById(id.Value);
+            if (category == null)
+                return NotFound();
+
+            return View(category);
         }
 
         [HttpPost]
         public IActionResult Edit(Category obj)
         {
             if (obj.Name == obj.DisplayOrder.ToString())
+                ModelState.AddModelError("name", "The name cannot match the display order");
+
+            if (obj.Name?.ToLower() == "test")
+                ModelState.AddModelError("", "Test is an invalid value");
+
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError("name", " The name explicitly cannot match the name");
-            }
-
-
-            if (obj.Name.ToLower() == "test")
-            {
-                ModelState.AddModelError("", " Test is an invalid value");
-            }
-
-
-
-            if ((ModelState.IsValid))
-            {
-                _db.Categories.Update(obj);
-                _db.SaveChanges();
-
+                _categoryRepo.Update(obj);
+                _categoryRepo.Save();
+                TempData["success"] = "Category updated successfully!";
                 return RedirectToAction("Index");
-
             }
 
-            return View();
-
+            return View(obj);
         }
 
-        // GET: /Category/Delete/{id}
         public IActionResult Delete(int? id)
         {
             if (id == null || id == 0)
                 return NotFound();
 
-            var category = _db.Categories.FirstOrDefault(c => c.Id == id);
+            var category = _categoryRepo.GetById(id.Value);
             if (category == null)
                 return NotFound();
 
@@ -87,61 +86,19 @@ namespace MyRazorProject.Controllers
         }
 
 
-        // POST: /Category/Delete
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(Category obj)
         {
-            var category = _db.Categories.FirstOrDefault(c => c.Id == obj.Id);
+            var category = _categoryRepo.GetById(obj.Id);
             if (category == null)
                 return NotFound();
 
-            _db.Categories.Remove(category);
-            _db.SaveChanges();
-
+            _categoryRepo.Delete(category);
+            _categoryRepo.Save();
+            TempData["success"] = "Category deleted successfully!";
             return RedirectToAction("Index");
         }
-
-
-
-
-        public IActionResult Create()
-        {
-
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Create(Category obj)
-        {
-            if (obj.Name == obj.DisplayOrder.ToString())
-            {
-                ModelState.AddModelError("name", " The name explicitly cannot match the name");
-            }
-
-
-            if (obj.Name.ToLower() == "test")
-            {
-                ModelState.AddModelError("", " Test is an invalid value");
-            }
-
-
-
-            if ((ModelState.IsValid))
-            {
-                _db.Categories.Add(obj);
-                _db.SaveChanges();
-
-                return RedirectToAction("Index");
-
-            }
-
-            return View();
-
-        }
-
-
     }
-
-
-    }
+}
