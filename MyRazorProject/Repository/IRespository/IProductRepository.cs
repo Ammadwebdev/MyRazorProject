@@ -7,6 +7,9 @@ namespace MyRazorProject.Repository.IRespository
     {
         IEnumerable<Product> GetAllWithCategory();
 
+        Product GetFirstOrDefault(Func<Product, bool> predicate);
+
+
         IEnumerable<Product> GetAll();
         Product? GetById(int id);
         void Add(Product product);

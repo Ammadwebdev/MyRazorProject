@@ -20,6 +20,12 @@ namespace MyRazorProject.Repositories
             return _context.Products.Include(p => p.Category).ToList();
         }
 
+        public Product GetFirstOrDefault(Func<Product, bool> predicate)
+        {
+            return _context.Products.FirstOrDefault(predicate);
+        }
+
+
         public IEnumerable<Product> GetAll() => _context.Products.ToList();
 
         public Product? GetById(int id) => _context.Products.FirstOrDefault(p => p.Id == id);

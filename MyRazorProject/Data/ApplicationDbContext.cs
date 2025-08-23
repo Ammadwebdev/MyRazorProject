@@ -33,7 +33,8 @@ namespace Thecoreappnow.Data
                     Price = 442,
                     Price50 = 1000,
                     Price100 = 399,
-                    CategoryId = 1
+                    CategoryId = 1,
+                    ImageUrl=""
                 },
                 new Product
                 {
@@ -46,7 +47,8 @@ namespace Thecoreappnow.Data
                     Price = 110.00,
                     Price50 = 100.00,
                     Price100 = 90.00,
-                    CategoryId = 2
+                    CategoryId = 2,
+                    ImageUrl=""
                 },
                 new Product
                 {
@@ -59,7 +61,9 @@ namespace Thecoreappnow.Data
                     Price = 85.00,
                     Price50 = 80.00,
                     Price100 = 75.00,
-                    CategoryId = 3
+                    CategoryId = 3,
+                    ImageUrl = ""
+
                 },
                 new Product
                 {
@@ -72,7 +76,9 @@ namespace Thecoreappnow.Data
                     Price = 99.00,
                     Price50 = 94.00,
                     Price100 = 89.00,
-                    CategoryId = 3 // ✅ Fixed: Using existing category ID
+                    CategoryId = 3, // ✅ Fixed: Using existing category ID
+                    ImageUrl = ""
+
                 }
             );
         }

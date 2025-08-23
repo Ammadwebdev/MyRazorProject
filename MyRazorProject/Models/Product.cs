@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyRazorProject.Models
@@ -44,6 +45,15 @@ namespace MyRazorProject.Models
         public int CategoryId { get; set; }
 
         // ✅ Make navigation property nullable to prevent model binder confusion
+
+        [ValidateNever]
+
         public Category? Category { get; set; }
+
+
+        [ValidateNever]
+        public string? ImageUrl { get; set; }
+
     }
+
 }
